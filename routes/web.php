@@ -13,8 +13,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+/*Route::get('/', function () {
 //    Route::
 //    return view('welcome');
     return view('test');
 });
+ */
+//Route::get('/','PostController@index');
+Route::get('/','App\Http\Controllers\PostController@index');
+//метод класса PostController
+
