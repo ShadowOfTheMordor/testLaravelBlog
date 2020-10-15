@@ -12,3 +12,22 @@ body{
 nav{
     margin-bottom: 15px;
 }
+
+.card{
+    margin-bottom: 10px;
+}
+
+.card-img{
+    height: 200px;
+    width: auto;
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+}
+
+.card-img, .card-author{
+    margin-bottom: 10px;
+}

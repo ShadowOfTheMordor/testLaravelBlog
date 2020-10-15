@@ -1,69 +1,60 @@
-<!doctype html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport"
-		content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="ie-edge">
-	<title>Document</title>
-        <link rel="stylesheet" href="{{asset("css/app.css") }}">
-        <link rel="stylesheet" href="{{asset("css/style.css") }}">
-</head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Navbar</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
- <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-      </li>
-    </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
-  </div>
-</nav>
-
-<?php
-//    echo "<pre>";
-//    var_dump($posts);
-//    echo "</pre>";
-?>
-<div class="container">
+@extends("layouts.layout")
+@section("content")
+    @if(isset($_GET['search']))
+        @if(count($posts))
+            <h2>Результаты поиска <?php=$_GET["search"]?></h2>
+            <?php
+                $posts_count=count($posts);
+                $posts_count_name="";
+                if ($posts_count==1)
+                    $posts_count_name="пост";
+                elseif($posts_count>1&&$posts_count<5)
+                {
+                    $posts_count_name="поста";
+                }
+                else
+                {
+                    $posts_count_name="постов";
+                
+                }
+            ?>
+            <p class="lead">Всего найдено {{count($posts)}} {{$posts_count_name}}</p>
+        @else
+            <h2>По запросу {{ $_GET['search'] }} ничего не найдено.</h2>
+            <a href="{{ route("post.index") }}" class="btn btn-outline-primary">Отобразить все посты</a>
+        @endif
+    @endif
     <div class="row">
         @foreach($posts as $post)
-        <div class="col-6">
-            <div class="card-header">{{$post->short_title }}</div>
-            <div class="card-body">{{$post->description }}</div>
+<!--        <div class="col-6 card border-primary "> -->
+        <div class="col-6 border-primary ">
+            <div class="card">
+                <div class="card-header"><h2>{{$post->short_title }}</h2></div>
+                <div class="card-body">
+                    <div class="card-img" style="background-image: url({{$post->img ?? asset("img/default.jpg")}}) "></div>
+                    <div class="card-author">Автор: {{ $post->name }}</div>
+                    <a href="#" class="btn btn-outline-primary">Посмотреть пост</a>
+<!--                <div class="card-img">
+                    <img src="{{$post->img ?? asset("img/default.jpg")}}" width="100%" height="100%"/>
+                </div>-->
+    
+
+
+<!--                         {{$post->description}} -->
+                </div>
+            </div>
         </div>
         @endforeach
     </div>
-</div>
+    @if(!isset($_GET['search']))
+        {{$posts->links()}}
+    @endif
 
-<!--</nav> -->
+    <?php
+/*    if(!isset($_GET['search']))
+        echo $posts->links();
+    else
+        echo "THIS IS WORKING ".$_GET['search']."  -->";*/
+    ?>
 
-    
-</body>
-</html>
+@endsection
