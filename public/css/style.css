@@ -28,6 +28,18 @@ nav{
     -o-background-size: cover;
 }
 
-.card-img, .card-author{
+.card-img, .card-author, .card-date{
     margin-bottom: 10px;
+}
+
+.card-img-max{
+    height: 500px;
+}
+
+.card-btn{
+    display: flex;
+}
+
+.card-btn a{
+    margin-right: 10px;
 }

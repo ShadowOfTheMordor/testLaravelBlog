@@ -1,6 +1,6 @@
 
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport"
@@ -36,10 +36,54 @@
 ?>
 
 <div class="container">
+    @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    @endif
     @yield("content")
 </div>
 
 <!--</nav> -->
-    
+
+<script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
+
+    <script>
+/*
+    $(window).on('hashchange', function() {
+        if (window.location.hash) {
+            var page = window.location.hash.replace('#', '');
+            if (page == Number.NaN || page <= 0) {
+                return false;
+            } else {
+                getPosts(page);
+            }
+        }
+    });
+    $(document).ready(function() {
+        $(document).on('click', '.pagination a', function (e) {
+            getPosts($(this).attr('href').split('page=')[1]);
+            e.preventDefault();
+        });
+    });
+    function getPosts(page) {
+        $.ajax({
+            url : '?page=' + page,
+            dataType: 'json',
+        }).done(function (data) {
+            console.log(data);
+            $('.posts').html(data);
+            location.hash = page;
+        }).fail(function () {
+            alert('Posts could not be loaded.');
+        });
+    }
+     * 
+ */
+    </script>
+
 </body>
 </html>

@@ -5,6 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+
+use Illuminate\Support\Facades\Log;
+use Illuminate\Routing\ResponseFactory;
+use Illuminate\Support\Facades\View;
+
+use function mb_substr;
 use function view;
 
 
@@ -33,6 +41,16 @@ class PostController extends Controller
             return view("posts.index",compact("posts"));
             
         }
+ /*       if ($request->ajax()) {
+            $posts=Post::join("users", "author_id","=","users.id")
+                    ->orderBy("posts.created_at","desc")
+                    ->paginate(4);
+//            return Response::json(view('posts', compact(posts))->render());
+            Log::info(" testing response".response()->json(View::make('posts.index', compact("posts"))->render()));
+            return response()->json(view('posts.index', compact("posts"))->render());
+        }
+  * 
+  */
         $posts=Post::join("users", "author_id","=","users.id")
                 ->orderBy("posts.created_at","desc")
                 ->paginate(4);
@@ -57,7 +75,19 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $post=new Post();
+        $post->author_id=rand(1,4);//заглушка
+        $post->title=$request->title;
+        $post->short_title=Str::length($request->title)>30 ? mb_substr($request->title,0,30)."..." : $request->title;
+        $post->description=$request->description;
+        if($request->file("img"))
+        {
+            $path=Storage::putFile ("public", $request->file("img"));
+            $url=Storage::url($path);//ссылка на картинку
+            $post->img=$url;
+        }
+        $post->save();
+        return redirect()->route('post.index')->with("success","Пост успешно создан!");
     }
 
     /**
@@ -68,7 +98,15 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        //
+        //достаем пост из бд
+/*        $post=Post::join("users","author_id","=","users.id")
+                ->where("post_id","=",$id);
+ * 
+ */
+//        $post=Post::find($id);
+        $post=Post::join("users","author_id","=","users.id")
+                ->find($id);
+        return view("posts.show",compact('post'));
     }
 
     /**
@@ -79,7 +117,10 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+        $post=Post::join("users","author_id","=","users.id")
+                ->find($id);
+        //можно и без join
+        return view("posts.edit",compact('post'));
     }
 
     /**
