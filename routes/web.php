@@ -32,3 +32,6 @@ Route::post('post/','App\Http\Controllers\PostController@store')->name("post.sto
 Route::patch('post/show/{id}','App\Http\Controllers\PostController@update')->name("post.update");
 Route::delete('post/{id}','App\Http\Controllers\PostController@destroy')->name("post.destroy");
 */
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

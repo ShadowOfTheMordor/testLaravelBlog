@@ -12,6 +12,7 @@ use function mb_substr;
 use function redirect;
 use function view;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 
 class PostController extends Controller
@@ -28,7 +29,7 @@ class PostController extends Controller
 //        $posts=\App\Models\Post::all();
 //        return view("posts.index",compact("posts"));
 //        $posts=\App\Models\Post::all();
-        Log::info(var_dump($request->session()->all()));
+//        Log::info(var_dump($request->session()->all()));
         if ($request->search)
         {
             $posts=Post::join("users","author_id","=","users.id")
