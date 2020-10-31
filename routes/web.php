@@ -34,4 +34,5 @@ Route::delete('post/{id}','App\Http\Controllers\PostController@destroy')->name("
 */
 Auth::routes();
 
+Route::get('/language/{locale}', [App\Http\Controllers\LocalizationController::class, 'index'])->name('language.switch');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

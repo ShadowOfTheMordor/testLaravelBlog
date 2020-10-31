@@ -34,7 +34,7 @@ class PostController extends Controller
         {
             $posts=Post::join("users","author_id","=","users.id")
                         ->where("title","like","%".$request->search."%")
-                        ->orWhere("descr","like","%".$request->search."%")
+                        ->orWhere("description","like","%".$request->search."%")
                         ->orWhere("name","like","%".$request->search."%")
                         ->orderBy("posts.created_at","desc")
                         ->get();
@@ -87,7 +87,7 @@ class PostController extends Controller
             $post->img=$url;
         }
         $post->save();
-        return redirect()->route('post.index')->with("success","Пост успешно создан!");
+        return redirect()->route('post.index')->with("success",__("messages.post.create.create_success"));
     }
 
     /**
@@ -144,7 +144,7 @@ class PostController extends Controller
             $post->img=$url;
         }
         $post->update();
-        return redirect()->route('post.show',["id" => $id])->with("success","Пост успешно отредактирован!");
+        return redirect()->route("post.show",["id" => $id])->with("success",__("messages.post.edit.edit_success"));
 
     }
 
@@ -159,6 +159,6 @@ class PostController extends Controller
         //удаление
         $post=Post::find($id);
         $post->delete();
-        return redirect()->route('post.index')->with("success","Пост успешно удален!");
+        return redirect()->route("post.index")->with("success",__("messages.post.index.delete_success"));
     }
 }
