@@ -6,9 +6,9 @@
 
 return [
     "administrators" => [
-        "maxster2@gmail.com" => [
-            "name" => "Maxster",
-            "email" => "maxster2@gmail.com",
+        "some@mail.ru" => [
+            "name" => "Some User",
+            "email" => "some@mail.ru",
             "password" => "123"
         ],
         "mroschin2@yandex.ru" => [
