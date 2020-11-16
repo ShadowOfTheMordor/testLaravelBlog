@@ -20,9 +20,13 @@ use Illuminate\Support\Facades\Route;
 });
  */
 //Route::get('/','PostController@index');
-Route::get('/','App\Http\Controllers\PostController@index');
 //метод класса PostController
 Route::resource("post", "App\Http\Controllers\PostController")->parameters(["post" => "id"]);
+//Route::get("/","App\Http\Controllers\PostController@index");
+Route::get("/",function()
+{
+    return redirect()->route("post.index");
+});
 /*
 Route::get('post/','App\Http\Controllers\PostController@index')->name("post.index");
 Route::get('post/create','App\Http\Controllers\PostController@create')->name("post.create");
@@ -34,5 +38,8 @@ Route::delete('post/{id}','App\Http\Controllers\PostController@destroy')->name("
 */
 Auth::routes();
 
-Route::get('/language/{locale}', [App\Http\Controllers\LocalizationController::class, 'index'])->name('language.switch');
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get("/language/{locale}", [App\Http\Controllers\LocalizationController::class, "index"])->name("language.switch");
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+/*Route::get("/custom",function(){
+    dd(config("app.developers"));
+});*/

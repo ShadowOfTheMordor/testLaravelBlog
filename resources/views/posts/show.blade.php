@@ -11,12 +11,16 @@
                     <div class="card-date">{{ __("messages.post.show.created_at",["post_created_at" => $post->created_at->diffForHumans()]) }}</div>
                     <div class="card-btn">
                         <a href="{{ route("post.index") }}" class="btn btn-outline-primary">{{ __("messages.post.show.button_homepage") }}</a>
+                        @auth
+                            @if (Auth::user()->id==$post->author_id||Auth::user()->is_admin)
                         <a href="{{ route("post.edit", ["id"=>$post->post_id]) }}" class="btn btn-outline-success">{{ __("messages.post.show.button_edit") }}</a>
                         <form action="{{ route("post.destroy", ["id"=>$post->post_id]) }}" method="post" onsubmit=" if (confirm('{{ __("messages.post.show.button_delete_confirm") }}')) {return true} else {return false}">
-                            @csrf
-                            @method('DELETE')
+                                @csrf
+                                @method('DELETE')
                             <input type="submit" class="btn btn-outline-danger" value="{{ __("messages.post.show.button_delete") }}">
+                            @endif
                         </form>
+                        @endauth
                     </div>
                 </div>
             </div>

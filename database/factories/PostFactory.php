@@ -26,12 +26,12 @@ class PostFactory extends Factory
         $created_at=$this->faker->dateTimeBetween("-30 days", "-1 days");
         
         return [
-            'title' => $title,
-            'short_title' => $short_title,
-            'author_id' => rand(1,4),//четыре рандомных пользователя. в реальных проектах сложнее
-            'description' => $this->faker->realText(rand(100,500)),
-            'created_at' =>$created_at,
-            'updated_at' =>$created_at,
+            "title" => $title,
+            "short_title" => $short_title,
+            "author_id" => rand(1,4),//четыре рандомных пользователя. в реальных проектах сложнее
+            "description" => $this->faker->realText(rand(100,500)),
+            "created_at" =>$created_at,
+            "updated_at" =>$created_at,
         ];
     }
 }

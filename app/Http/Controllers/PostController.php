@@ -13,10 +13,15 @@ use function redirect;
 use function view;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use \Auth;
 
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware("auth")->except("show","index");
+    }
     /**
      * Display a listing of the resource.
      *
@@ -64,6 +69,8 @@ class PostController extends Controller
      */
     public function create()
     {
+//        return redirect()->route("post.index")->withErrors(__("messages.post.index.delete_forbidden"));
+
         return view("posts.create");
     }
 
@@ -76,7 +83,8 @@ class PostController extends Controller
     public function store(PostRequest $request)
     {
         $post=new Post();
-        $post->author_id=rand(1,4);//заглушка
+//        $post->author_id=rand(1,4);//заглушка
+        $post->author_id=Auth::user()->id;
         $post->title=$request->title;
         $post->short_title=Str::length($request->title)>30 ? mb_substr($request->title,0,30)."..." : $request->title;
         $post->description=$request->description;
@@ -87,7 +95,7 @@ class PostController extends Controller
             $post->img=$url;
         }
         $post->save();
-        return redirect()->route('post.index')->with("success",__("messages.post.create.create_success"));
+        return redirect()->route("post.index")->with("success",__("messages.post.create.create_success"));
     }
 
     /**
@@ -106,6 +114,9 @@ class PostController extends Controller
 //        $post=Post::find($id);
         $post=Post::join("users","author_id","=","users.id")
                 ->find($id);
+        if (empty($post))
+            return redirect()->route("post.index")->withErrors (__("messages.post.show.post_nonexistant"));
+        Session::flash("backUrl",url()->current());
         return view("posts.show",compact('post'));
     }
 
@@ -119,8 +130,14 @@ class PostController extends Controller
     {
         $post=Post::join("users","author_id","=","users.id")
                 ->find($id);
+        if (empty($post))
+            return redirect()->route("post.index")->withErrors (__("messages.post.edit.post_nonexistant"));
+        if ($post->author_id!=Auth::user()->id&&!Auth::user()->is_admin)
+        {
+            return redirect()->route("post.index")->withErrors(__("messages.post.edit.edit_forbidden"));
+        }
         //можно и без join
-        return view("posts.edit",compact('post'));
+        return view("posts.edit",compact("post"));
     }
 
     /**
@@ -134,6 +151,12 @@ class PostController extends Controller
     {
         //зачем-то ищем эту запись
         $post=Post::find($id);
+        if (empty($post))
+            return redirect()->route("post.index")->withErrors (__("messages.post.update.post_nonexistant"));
+        if ($post->author_id!=Auth::user()->id&&!Auth::user()->is_admin)
+        {
+            return redirect()->route("post.index")->withErrors(__("messages.post.edit.edit_forbidden"));
+        }
         $post->title=$request->title;
         $post->short_title=Str::length($request->title)>30 ? Str::substr($request->title,0,30)."..." : $request->title;
         $post->description=$request->description;
@@ -158,6 +181,12 @@ class PostController extends Controller
     {
         //удаление
         $post=Post::find($id);
+        if (empty($post))
+            return redirect()->route("post.index")->withErrors (__("messages.post.delete.post_nonexistant"));
+        if ($post->author_id!=Auth::user()->id&&!Auth::user()->is_admin)
+        {
+            return redirect()->route("post.index")->withErrors(__("messages.post.index.delete_forbidden"));
+        }
         $post->delete();
         return redirect()->route("post.index")->with("success",__("messages.post.index.delete_success"));
     }

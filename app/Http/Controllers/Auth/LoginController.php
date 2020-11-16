@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+
 
 class LoginController extends Controller
 {
@@ -29,7 +31,7 @@ class LoginController extends Controller
      */
 //    protected $redirectTo = RouteServiceProvider::HOME;
 //    protected $redirectTo = RouteServiceProvider::POST;
-    protected $redirectTo = "/";
+    protected $redirectTo = "/post";
 
     /**
      * Create a new controller instance.
@@ -40,12 +42,31 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+    public function showLoginForm()
+    {
+        if (Session::has("backUrl"))
+            Session::reflash();
+        return view("auth.login");
+    }
     
     protected function authenticated(Request $request, $user)
     {
 //        $request->session()->flash("success",__("messages.auth.LoginSuccess"));
         \Illuminate\Support\Facades\Session::flash("success", __("messages.auth.LoginSuccess"));
-        return redirect()->intended($this->redirectPath());
+//        return redirect()->intended($this->redirectPath());
+//        return redirect()->back();
+//        $url=url()->previous();
+//        return redirect($url);
+        if (Session::has("backUrl"))
+            return redirect(Session::get ("backUrl"));
+        return redirect()->back();
+    }
+    
+    public function loggedOut(Request $request)
+    {
+        return redirect(route("post.index"))
+                ->with("success",__("messages.auth.LogoutSuccess") );
     }
 
 }
